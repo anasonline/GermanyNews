@@ -45,7 +45,5 @@
             android:textColor="#757575"
             android:textSize="14sp"
             tools:text="2017-03-17" />
-
     </LinearLayout>
-
 </LinearLayout>

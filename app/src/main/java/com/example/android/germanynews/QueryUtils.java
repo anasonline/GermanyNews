@@ -37,7 +37,7 @@ public final class QueryUtils {
     private QueryUtils() {
     }
 
-    public static List<NewsItem> fetchBookData(String requestUrl) {
+    public static List<NewsItem> fetchNewsData(String requestUrl) {
 
         // Create URL object
         URL url = createUrl(requestUrl);
@@ -50,7 +50,7 @@ public final class QueryUtils {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
 
-        // Extract relevant fields from the JSON response and create a list of {@link Book}s
+        // Extract relevant fields from the JSON response and create a list of {@link NewsItem}s
         List<NewsItem> newsItems = extractFeatureFromJson(jsonResponse);
 
         return newsItems;
@@ -98,7 +98,7 @@ public final class QueryUtils {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the Book JSON results.", e);
+            Log.e(LOG_TAG, "Problem retrieving the NewsItem JSON results.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -190,7 +190,7 @@ public final class QueryUtils {
                     // Create a new {@link NewsItem} object with the title, section, and date from the JSON response.
                     NewsItem newsItem = new NewsItem(title, section, date, webUrl);
 
-                    // Add the new {@link NewsItem} to the list of books.
+                    // Add the new {@link NewsItem} to the list of news items.
                     newsItems.add(newsItem);
                 }
             } else {
@@ -201,11 +201,9 @@ public final class QueryUtils {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the book JSON results", e);
+            Log.e("QueryUtils", "Problem parsing the newsItem JSON results", e);
         }
-
-        // Return the list of books
+        // Return the list of news
         return newsItems;
     }
-
 }
