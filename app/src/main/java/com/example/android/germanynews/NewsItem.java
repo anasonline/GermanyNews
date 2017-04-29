@@ -9,11 +9,13 @@ public class NewsItem {
     private String mTitle;
     private String mSection;
     private String mDate;
+    private String mWebUrl;
 
-    public NewsItem(String title, String section, String date) {
+    public NewsItem(String title, String section, String date, String webUrl) {
         mTitle = title;
         mSection = section;
         mDate = date;
+        mWebUrl = webUrl;
     }
 
     public String getTitle() {
@@ -26,5 +28,9 @@ public class NewsItem {
 
     public String getDate() {
         return mDate;
+    }
+
+    public String getWebUrl() {
+        return mWebUrl;
     }
 }

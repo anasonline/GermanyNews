@@ -184,8 +184,11 @@ public final class QueryUtils {
                     // Extract the value for the key "webPublicationDate"
                     String date = currentNewsItem.getString("webPublicationDate");
 
+                    // Extract the value for the key "webUrl"
+                    String webUrl = currentNewsItem.getString("webUrl");
+
                     // Create a new {@link NewsItem} object with the title, section, and date from the JSON response.
-                    NewsItem newsItem = new NewsItem(title, section, date);
+                    NewsItem newsItem = new NewsItem(title, section, date, webUrl);
 
                     // Add the new {@link NewsItem} to the list of books.
                     newsItems.add(newsItem);
