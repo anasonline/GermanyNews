@@ -3,4 +3,5 @@
     <string name="no_results">No Results!</string>
     <string name="no_connection">No Internet Connection!</string>
     <string name="no_news">No News Found!</string>
+    <string name="menu_refresh">Refresh</string>
 </resources>
