@@ -9,6 +9,9 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+
 
         // Create a new adapter that takes an empty list of news items as input
         mAdapter = new NewsItemAdapter(MainActivity.this, new ArrayList<NewsItem>());
@@ -106,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         if (newsItems != null && !newsItems.isEmpty()) {
             mAdapter.addAll(newsItems);
         }
+
     }
 
     @Override
@@ -114,27 +119,64 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         mAdapter.clear();
     }
 
+    // An override for the SwipeRefreshLayout.OnRefreshListener interface this is called
+    // when user swipes down to refresh
+
     @Override
     public void onRefresh() {
+        refresh();
+    }
+
+    // Stop the refresh animation once the reload is finished
+
+    public void onItemsLoadComplete() {
+        // Stop refresh animation
+        mSwipeRefreshLayout.setRefreshing(false);
+        Toast.makeText(this, "Up to date!", Toast.LENGTH_SHORT).show();
+    }
+
+    // Inflate a REFRESH menu button as an alternative way to refresh the results
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // Perform the refresh once the REFRESH menu button is tapped
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_refresh) {
+            refresh();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // The refresh() method is called when a user requests a refresh either from the "swipe to refresh"
+    // action, or by clicking the Refresh menu button.
+
+    public void refresh() {
 
         // Get a reference to the LoaderManager, in order to interact with loaders.
         LoaderManager loaderManager = getLoaderManager();
 
-        // Initialize the loader. Pass in the int ID constant defined above and pass in null for
-        // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
-        // because this activity implements the LoaderCallbacks interface).
-        loaderManager.restartLoader(NEWSITEM_LOADER_ID, null, this);
+        // Get a reference to the ConnectivityManager to check state of network connectivity
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        onItemsLoadComplete();
+        // Get details on the currently active default data network
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
+        // If there is a network connection, fetch data
+        if (networkInfo != null && networkInfo.isConnected()) {
+
+            loaderManager.initLoader(NEWSITEM_LOADER_ID, null, this);
+            onItemsLoadComplete();
+
+        } else {
+            Toast.makeText(this, "Check your Internet connection!", Toast.LENGTH_SHORT).show();
+        }
     }
-
-    public void onItemsLoadComplete() {
-
-        // Stop refresh animation
-        mSwipeRefreshLayout.setRefreshing(false);
-
-        Toast.makeText(this, "Up to date!", Toast.LENGTH_SHORT).show();
-    }
-
 }
